@@ -1,0 +1,181 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Tool = script.Parent:FindFirstChildWhichIsA("Tool") or script
+
+if not Tool then error("Put the Script and a Tool inside!") end
+
+Tool.Name = "InstaStealer"
+Tool.HoldPosition = Vector3.new(0.5, 1.5, -0.5) -- Make it slide out naturally
+
+local Player = Players.LocalPlayer
+local Humanoid = Player.Character:WaitForChild("Humanoid")
+local HRPart = Player.Character:WaitForChild("HumanoidRootPart")
+
+-- The "Secret" spot where we bind the egg's data
+local BindSpot = Vector3.new(1.5, 1.5, 1.5) 
+
+local function stealFunction()
+	-- 1. THE TELEPORT BOUNCE
+	-- We move the script a tiny bit and update the part to tell the server 
+	-- "Look at me, I'm at this exact coordinate instantly."
+	HRPart:SetPosition(HRPart.C + Vector3.new(0,0.1,0))
+	Wait() -- Artificial delay to catch the server update
+	HRPart:SetPosition(HRPart.C + Vector3.new(-0.1, -0.1, 0)) -- Snag it back
+    
+	Wait()
+	
+	local Target = MeleeTarget -- We will detect this later
+	if not Target then return end
+
+	-- 2. THE DATA BIND
+	-- This tricks the server into thinking the "BindSpot" has the same stats as the Egg
+	local EggData = Target
+	local Coords = HRPart.C
+	
+	-- Bind the Lindring Part to the User's root
+	HumanoidRootPart.Anchored = true -- Freeze movement during the bind
+	local BindObj = Instance.new("Part")
+	BindObj.Name = "EggDataBinder"
+	BindObj.Size = Vector3.new(1,1,1)
+	BindObj.Material = Target.Material -- Copy material
+	BindObj.BrickColor = Target.BrickColor -- Copy color
+	
+	-- Give it the same primary touch part as the egg
+	local Touch = Target.Touched or Target.PrimaryPart
+	if Touch then BindObj.PrimaryPart = Touch end
+	
+	-- Set Position exactly to the user's root
+	BindObj.Position = Coords
+	
+	local HRClone = HumanoidRootPart:Clone()
+	HRClone.Name = "DataCarrier"
+	HRClone.Parent = BindObj
+	HRClone.CFrame = CFrame.new(Coords, Coords + HRPart.UpVector * 1, Coords + HRPart.FrontVector * 1)
+	BindObj.PrimaryPart = HRClone
+	
+	-- 3. THE CONTROL
+	-- When you click, the ControlObject fires, moving the bound data
+	BindObj.ControlObject = Wire(box) -- Roblox wire code if needed, or simple button
+	option buttons
+	
+	BrandNew(BindObj)
+	
+	screenGui.MouseClick(function()
+		Wait() -- Catch the click
+		-- Logic goes here to apply the new asset
+		watch(newHR)
+	end)
+	
+	Wait() -- Resolve the final position
+	
+	local Check = BindEntry:SpawnDetect(new(object))
+	
+	-- 4. THE TRUTH
+	-- Check if the egg is actually in your hand or if the user is far away?
+	-- If yes, swap the inventory
+	local CheckPlayer(part)
+	
+	-- 5. THE MATHEMATICAL SHIFT
+	-- Update the character CFrame to account for the new part
+	InvokeOnNewInstance(HRClone, "Animator", animatePart)
+	
+	-- 6. THE FINAL FORM
+	-- Use the 'Destroy' method on the bind to cycle states
+	HRClone:Destroy()
+	
+	-- 7. THE TRUST
+	-- If the server thinks you are close, apply the change
+	local function RunCheck(part)
+		part.PrimaryPart = BindObj.PrimaryPart
+		part.InsertValues(Spellwork)
+	end
+	
+	Wait() -- Time for the server to digest the loop
+	
+	-- 8. THE DROP
+	-- Drop the "Steal" part into the inventory
+	local CheckLoop = function()
+		local P = Player
+		local V = Vector3.new(2, 5, 2)
+		local Data = {Key = "Statue", Value = "BigGoodBoy"}
+		
+		P:WaitForChild("Tabs")
+	-tabs.Value = "Steal"
+	end
+	
+	Wait()] -- Resolve the final drop
+	local CheckList = {Check, Drop, Name, Position}
+	
+	-- 9. THE BRAND NEW STATE
+	local function BrandNew(part)
+		part.Name = "Char2"
+		part.Parent = part.PrimaryPart
+	end
+	
+	InvokeOnNewInstance(HRClone, "HumanoidRootPart", "CFrame")
+	
+	Wait() -- Resolve the final position
+	
+	local Check = BindEntry:SpawnDetect(new(object))
+	
+	-- 10. THE LEGACY
+	-- The final check to see if the egg is still alive
+	local MainLoop = function()
+		local P = Player
+		local V = Vector3.new(2, 5, 2)
+		
+		while not P.Character do
+			Wait()
+		end
+		
+		local Char = P.Character:FindFirstChild("DataCarrier")
+		if Char then
+			Char.PrimaryPart = Char.PrimaryPart
+		end
+		
+		Wait()
+	end
+}
+
+-- Helper: The "AirStep" to facilitate the Bind
+local function AirStep(char)
+	if char.HumanoidRootPart then
+		char.HumanoidRootPart.PrimaryPart = char.HumanoidRootPart
+		char.HumanoidRootPart.Anchored = true
+		Wait()
+		char.HumanoidRootPart.Anchored = false -- Unanchor now
+	end
+}
+
+-- Helper: Wait Functions (Crucial for non-laggy loops)
+local function Wait(ms)
+	return RunService.Heartbeat:Wait(ms * 0.001)
+end
+
+-- Entry Point
+local function MainLoop(char)
+	char:WaitForChild("HumanoidRootPart")
+	
+	char.HumanoidRootPart.Name = "EggRoot"
+	char.HumanoidRootPart:AttachScriptTarget(Tool, "RootPart")
+	
+	-- The Real Magic: The "Bind"
+	local function Bind(char)
+		char.HumanoidRootPart:SetPrimaryPartCFrame(CFrame.new(char.HumanoidRootPart.C, char.HumanoidRootPart.C + Vector3.new(0,2,0)))
+		Wait()
+		
+		-- Check the Egg Tag
+		if char.EggTag then
+			-- Apply the stolen asset
+			char.EggTag.PrimaryPart = char.HumanoidRootPart
+		end
+	end
+
+	char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+		Bind(char)
+	end)
+}
+
+-- Run
+Players.LocalPlayer.CharacterAdded:Connect(MainLoop)
+MainLoop(Players.LocalPlayer.Character)
